@@ -1,0 +1,22 @@
+spring:
+  devtools:
+    restart:
+      aditional-paths: src/main/java
+  application:
+    name: backend-prueba-service
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+  datasource:
+    plataform: postgres
+    driver-class-name: org.postgresql.Driver
+    dbname: Preu_TopEducationPrueba
+    url: jdbc:postgresql://localhost:5432/Preu_TopEducationPrueba
+    username: postgres
+    password: Aaldea1604
+  cloud:
+    config:
+      enabled: true
+      uri: http://localhost:8081
