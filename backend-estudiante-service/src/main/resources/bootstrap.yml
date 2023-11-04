@@ -1,14 +1,14 @@
 spring:
   devtools:
     restart:
-      aditional-paths: src/main/java
+      additional-paths: src/main/java
   application:
     name: backend-estudiante-service
   jpa:
     database: POSTGRESQL
     show-sql: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
   datasource:
     plataform: postgres
     driver-class-name: org.postgresql.Driver
