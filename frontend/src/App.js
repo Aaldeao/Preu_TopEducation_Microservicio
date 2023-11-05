@@ -5,6 +5,7 @@ import './App.css';
 import Main from './components/Main';
 import HeaderComponent from './components/HeaderComponent';
 import CrearEstudiante from './components/CrearEstudiante';
+import ListarEstudiante from './components/ListarEstudiante';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
           <Routes> 
             <Route path="/" element={<Main />} />
             <Route path="/crear-estudiante" element={<CrearEstudiante />} />
+            <Route path="/lista-estudiantes" element={<ListarEstudiante />} />
           </Routes>
         </div>
       </Router>

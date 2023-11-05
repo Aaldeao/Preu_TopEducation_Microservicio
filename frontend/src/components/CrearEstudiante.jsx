@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Swal from 'sweetalert2';
+import EstudianteService from "../services/EstudianteService";
 
 function CrearEstudiante(props){
     const initialState = {
@@ -78,6 +79,7 @@ function CrearEstudiante(props){
                     tipoDepago: estudiante.tipoDepago,
                 };
                 console.log(newEstudiante);
+                EstudianteService.createEstudiante(newEstudiante);
 
                 Swal.fire({
                     title: "Enviado",
@@ -88,7 +90,7 @@ function CrearEstudiante(props){
                         Swal.showLoading()
                     },
                 });
-                setEstudiante(initialState);
+                navigateHome();
             }
         });
     };
@@ -119,11 +121,11 @@ function CrearEstudiante(props){
 
                     <Form.Group className="mb-3" controlId="tipoColegio" value={estudiante.tipoColegio} onChange={changeTipoColegioHandler}>
                         <Form.Label className="agregar">Tipo Colegio:</Form.Label>
-                        <Form.Control as="select" name="tipoColegio">
+                        <Form.Select as="select" name="tipoColegio">
                             <option value="Municipal">Municipal</option>
                             <option value="Subvencionado">Subvencionado</option>
                             <option value="Privado">Privado</option>
-                        </Form.Control>
+                        </Form.Select>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="nombreColegio" value={estudiante.nombreColegio} onChange={changeNombreColegioHandler}>
@@ -138,7 +140,10 @@ function CrearEstudiante(props){
 
                     <Form.Group className="mb-3" controlId="tipoDepago" value={estudiante.tipoDepago} onChange={changeTipoDepagoHandler}>
                         <Form.Label className="agregar">Tipo de Pago:</Form.Label>
-                        <Form.Control className="agregar" type="text" name="tipoDepago" />
+                        <Form.Select className="agregar" type="text" name="tipoDepago">
+                            <option value="Contado">Contado</option>
+                            <option value="Cuotas">Cuotas</option>
+                        </Form.Select>
                     </Form.Group>
 
                     <Button className="boton" onClick={ingresarEstudiante}>Añadir Estudiante</Button>
