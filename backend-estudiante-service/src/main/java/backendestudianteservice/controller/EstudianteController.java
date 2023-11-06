@@ -4,8 +4,8 @@ import backendestudianteservice.entity.EstudianteEntity;
 import backendestudianteservice.service.EstudianteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/Estudiante")
@@ -29,6 +29,12 @@ public class EstudianteController {
     public ResponseEntity<String> guardarEstudiante(@RequestBody EstudianteEntity estudiante){
         estudianteService.ingresarestudiante(estudiante);
         return ResponseEntity.ok("Estudiante guardado");
+    }
+
+    @GetMapping // Muestra a todos los estudiantes registrados //
+    public ResponseEntity<ArrayList<EstudianteEntity>> lista(){
+        ArrayList<EstudianteEntity> estudianteEntities = estudianteService.listaEstudiante();
+        return ResponseEntity.ok(estudianteEntities);
     }
 
 }

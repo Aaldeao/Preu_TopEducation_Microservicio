@@ -7,9 +7,10 @@ import org.springframework.stereotype.Repository;
 import java.util.ArrayList;
 
 @Repository
-public interface EstudianteRepository extends JpaRepository<EstudianteEntity, Long> {
+public interface EstudianteRepository extends JpaRepository<EstudianteEntity, String> {
 
     //EstudianteEntity findByRut(String rut); // Permite buscar por el rut en la base de datos //
 
-    ArrayList<EstudianteEntity> findAll(); //Obtiene lo del estudiante //
+   //ArrayList<EstudianteEntity> findAll(); //Obtiene lo del estudiante //
+   ArrayList<EstudianteEntity> findAll(); //Obtiene a todos los estudiantes //
 }

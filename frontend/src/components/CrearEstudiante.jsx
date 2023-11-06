@@ -96,7 +96,7 @@ function CrearEstudiante(props){
     };
 
     return (
-        <div className="general">
+        <div className="generalformulario">
             <div className="container-create">
                 <Form>
                     <Form.Group className="mb-3" controlId="rut" value={estudiante.rut} onChange={changeRutHandler}>
@@ -105,7 +105,7 @@ function CrearEstudiante(props){
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="nombres" value={estudiante.nombres} onChange={changeNombresHandler}>
-                        <Form.Label className="agregar">Nombres:</Form.Label>
+                        <Form.Label className="agregar">Nombre:</Form.Label>
                         <Form.Control className="agregar" type="text" name="nombres" />
                     </Form.Group>
 

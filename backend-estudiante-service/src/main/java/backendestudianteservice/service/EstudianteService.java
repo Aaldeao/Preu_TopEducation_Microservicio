@@ -5,6 +5,8 @@ import backendestudianteservice.repository.EstudianteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Service
 public class EstudianteService {
 
@@ -18,5 +20,9 @@ public class EstudianteService {
     */
     public EstudianteEntity ingresarestudiante(EstudianteEntity estudiante){ // Guarda en la base de datos los datos del estudiante //
         return estudianteRepository.save(estudiante);
+    }
+
+    public ArrayList<EstudianteEntity>listaEstudiante(){
+        return estudianteRepository.findAll();
     }
 }
