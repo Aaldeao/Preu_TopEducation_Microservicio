@@ -30,7 +30,7 @@ spring:
           uri: lb://backend-estudiante-service
           predicates:
             - Path=/Estudiante/**
-        - id: backend-B-service
-          uri: lb://backend-B-service
+        - id: backend-cuota-service
+          uri: lb://backend-cuota-service
           predicates:
-            - Path=/B/**
+            - Path=/Cuota/**
