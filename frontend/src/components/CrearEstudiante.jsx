@@ -57,43 +57,32 @@ function CrearEstudiante(props){
     };
 
     const ingresarEstudiante = (event) => {
-        Swal.fire({
-            title: "¿Confirma los datos del estudiante?",
-            text: "No podran editarse en caso de equivocación",
-            icon: "question",
-            showDenyButton: true,
-            confirmButtonText: "Confirmar",
-            confirmButtonColor: "rgb(68, 194, 68)",
-            denyButtonText: "Cancelar",
-            denyButtonColor: "rgb(190, 54, 54)",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                let newEstudiante = {
-                    rut: estudiante.rut,
-                    nombres: estudiante.nombres,
-                    apellidos: estudiante.apellidos,
-                    fechaNacimiento: estudiante.fechaNacimiento,
-                    tipoColegio: estudiante.tipoColegio,
-                    nombreColegio: estudiante.nombreColegio,
-                    anoEgreso: estudiante.anoEgreso,
-                    tipoDepago: estudiante.tipoDepago,
-                };
-                console.log(newEstudiante);
-                EstudianteService.createEstudiante(newEstudiante);
+        let newEstudiante = {
+            rut: estudiante.rut,
+            nombres: estudiante.nombres,
+            apellidos: estudiante.apellidos,
+            fechaNacimiento: estudiante.fechaNacimiento,
+            tipoColegio: estudiante.tipoColegio,
+            nombreColegio: estudiante.nombreColegio,
+            anoEgreso: estudiante.anoEgreso,
+            tipoDepago: estudiante.tipoDepago,
+        };
 
-                Swal.fire({
-                    title: "Enviado",
-                    timer: 2000,
-                    icon: "success",
-                    timerProgressBar: true,
-                    didOpen: () => {
-                        Swal.showLoading()
-                    },
-                });
-                navigateHome();
-            }
+        EstudianteService.createEstudiante(newEstudiante);
+
+        Swal.fire({
+            title: "Formulario enviado",
+            text: "Los datos del estudiante se han guardado correctamente.",
+            icon: "success",
+            timer: 2000,
+            timerProgressBar: true,
+            didOpen: () => {
+                Swal.showLoading();
+            },
         });
+        navigateHome();
     };
+
 
     return (
         <div className="generalformulario">
@@ -122,6 +111,7 @@ function CrearEstudiante(props){
                     <Form.Group className="mb-3" controlId="tipoColegio" value={estudiante.tipoColegio} onChange={changeTipoColegioHandler}>
                         <Form.Label className="agregar">Tipo Colegio:</Form.Label>
                         <Form.Select as="select" name="tipoColegio">
+                            <option value="Seleccione..">Seleccione..</option>
                             <option value="Municipal">Municipal</option>
                             <option value="Subvencionado">Subvencionado</option>
                             <option value="Privado">Privado</option>
@@ -141,6 +131,7 @@ function CrearEstudiante(props){
                     <Form.Group className="mb-3" controlId="tipoDepago" value={estudiante.tipoDepago} onChange={changeTipoDepagoHandler}>
                         <Form.Label className="agregar">Tipo de Pago:</Form.Label>
                         <Form.Select className="agregar" type="text" name="tipoDepago">
+                            <option value="Seleccione..">Seleccione..</option>
                             <option value="Contado">Contado</option>
                             <option value="Cuotas">Cuotas</option>
                         </Form.Select>

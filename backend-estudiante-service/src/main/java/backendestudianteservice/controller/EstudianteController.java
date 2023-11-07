@@ -36,5 +36,10 @@ public class EstudianteController {
         ArrayList<EstudianteEntity> estudianteEntities = estudianteService.listaEstudiante();
         return ResponseEntity.ok(estudianteEntities);
     }
+    @GetMapping("/{rut}")
+    public ResponseEntity<EstudianteEntity> obtenerEstudiantePorRut(@PathVariable("rut") String rut) {
+        EstudianteEntity estudiante = estudianteService.buscarRut(rut);
+        return ResponseEntity.ok(estudiante);
+    }
 
 }

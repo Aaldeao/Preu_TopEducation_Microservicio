@@ -4,7 +4,6 @@ import backendestudianteservice.entity.EstudianteEntity;
 import backendestudianteservice.repository.EstudianteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 
 @Service
@@ -22,7 +21,11 @@ public class EstudianteService {
         return estudianteRepository.save(estudiante);
     }
 
-    public ArrayList<EstudianteEntity>listaEstudiante(){
+    public ArrayList<EstudianteEntity>listaEstudiante(){ // Lista de estudiante guardado en la base de datos //
         return estudianteRepository.findAll();
+    }
+
+    public EstudianteEntity buscarRut(String rut){
+        return estudianteRepository.findByRut(rut);
     }
 }
