@@ -5,7 +5,7 @@ import Button from 'react-bootstrap/Button';
 import Swal from 'sweetalert2';
 import EstudianteService from "../services/EstudianteService";
 
-function CrearEstudiante(props){
+function CrearEstudiante(props) {
     const initialState = {
         rut: "",
         nombres: "",
@@ -15,7 +15,7 @@ function CrearEstudiante(props){
         nombreColegio: "",
         anoEgreso: "",
         tipoDepago: "",
-
+        cantidad: "",
     };
 
     const [estudiante, setEstudiante] = useState(initialState);
@@ -56,6 +56,10 @@ function CrearEstudiante(props){
         setEstudiante({ ...estudiante, tipoDepago: event.target.value });
     };
 
+    const changeCantidadHandler = event => {
+        setEstudiante({ ...estudiante, cantidad: event.target.value });
+    };
+
     const ingresarEstudiante = (event) => {
         let newEstudiante = {
             rut: estudiante.rut,
@@ -66,10 +70,11 @@ function CrearEstudiante(props){
             nombreColegio: estudiante.nombreColegio,
             anoEgreso: estudiante.anoEgreso,
             tipoDepago: estudiante.tipoDepago,
+            cantidad: estudiante.cantidad,
         };
-
+    
         EstudianteService.createEstudiante(newEstudiante);
-
+    
         Swal.fire({
             title: "Formulario enviado",
             text: "Los datos del estudiante se han guardado correctamente.",
@@ -77,12 +82,11 @@ function CrearEstudiante(props){
             timer: 2000,
             timerProgressBar: true,
             didOpen: () => {
-                Swal.showLoading();
+            Swal.showLoading();
             },
         });
         navigateHome();
     };
-
 
     return (
         <div className="generalformulario">
@@ -90,22 +94,22 @@ function CrearEstudiante(props){
                 <Form>
                     <Form.Group className="mb-3" controlId="rut" value={estudiante.rut} onChange={changeRutHandler}>
                         <Form.Label className="agregar">Rut:</Form.Label>
-                        <Form.Control className="agregar" type="text" name="rut" />
+                        <Form.Control className="agregar" type="text" name="rut" required/>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="nombres" value={estudiante.nombres} onChange={changeNombresHandler}>
                         <Form.Label className="agregar">Nombre:</Form.Label>
-                        <Form.Control className="agregar" type="text" name="nombres" />
+                        <Form.Control className="agregar" type="text" name="nombres" required/>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="apellidos" value={estudiante.apellidos} onChange={changeApellidosHandler}>
                         <Form.Label className="agregar">Apellidos:</Form.Label>
-                        <Form.Control className="agregar" type="text" name="apellidos" />
+                        <Form.Control className="agregar" type="text" name="apellidos" required/>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="fechaNacimiento" value={estudiante.fechaNacimiento} onChange={changeFechaNacimientoHandler}>
                         <Form.Label className="agregar">Fecha de Nacimiento:</Form.Label>
-                        <Form.Control className="agregar" type="date" name="fechaNacimiento" />
+                        <Form.Control className="agregar" type="date" name="fechaNacimiento" required/>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="tipoColegio" value={estudiante.tipoColegio} onChange={changeTipoColegioHandler}>
@@ -120,12 +124,12 @@ function CrearEstudiante(props){
 
                     <Form.Group className="mb-3" controlId="nombreColegio" value={estudiante.nombreColegio} onChange={changeNombreColegioHandler}>
                         <Form.Label className="agregar">Nombre del Colegio:</Form.Label>
-                        <Form.Control className="agregar" type="text" name="nombreColegio" />
+                        <Form.Control className="agregar" type="text" name="nombreColegio" required/>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="anoEgreso" value={estudiante.anoEgreso} onChange={changeAnoEgresoHandler}>
                         <Form.Label className="agregar">Año de Egreso del Colegio:</Form.Label>
-                        <Form.Control className="agregar" type="text" name="anoEgreso" />
+                        <Form.Control className="agregar" type="text" name="anoEgreso" required/>
                     </Form.Group>
 
                     <Form.Group className="mb-3" controlId="tipoDepago" value={estudiante.tipoDepago} onChange={changeTipoDepagoHandler}>
@@ -137,10 +141,23 @@ function CrearEstudiante(props){
                         </Form.Select>
                     </Form.Group>
 
+                    <Form.Group className="mb-3" controlId="cantidad" value={estudiante.cantidad} onChange={changeCantidadHandler}>
+                        <Form.Label className="agregar">Cantidad de Cuotas:</Form.Label>
+                        <Form.Control
+                            className="agregar"
+                            type="number"
+                            name="cantidad"
+                            required
+                            min="1"
+                            max="10"
+                        />
+                    </Form.Group>
+
                     <Button className="boton" onClick={ingresarEstudiante}>Añadir Estudiante</Button>
                 </Form>
             </div>
         </div>
     );
 }
-    export default CrearEstudiante;
+
+export default CrearEstudiante;

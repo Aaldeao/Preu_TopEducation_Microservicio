@@ -6,6 +6,7 @@ import Main from './components/Main';
 import HeaderComponent from './components/HeaderComponent';
 import CrearEstudiante from './components/CrearEstudiante';
 import ListarEstudiante from './components/ListarEstudiante';
+import GeneradorCuotas from './components/GeneradorCuotas';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
             <Route path="/" element={<Main />} />
             <Route path="/crear-estudiante" element={<CrearEstudiante />} />
             <Route path="/lista-estudiantes" element={<ListarEstudiante />} />
+            <Route path="/generar-cuota" element={<GeneradorCuotas />} />
           </Routes>
         </div>
       </Router>

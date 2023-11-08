@@ -23,6 +23,7 @@ public class CuotaService {
     // Crea un cuota //
     public CuotaEntity creacuota(int numero, EstudianteEntity estudiante){
         CuotaEntity cuota = new CuotaEntity();
+        //cuota.setEstudiante(estudiante);
         cuota.setEstado("Pendiente");
         cuota.setArancel(calculararancel(estudiante));
         cuota.setNumeroCuota(numero);
@@ -88,17 +89,22 @@ public class CuotaService {
     }
 
     // Genera las cuotas mediante a la cantidad asociada que solicia la persona y las guarda  //
-    public void cuotasxEstudiante(EstudianteEntity estudiante) {
-        EstudianteEntity estudiante1 = findByRut(estudiante.getRut());
-        estudiante1.setCantidad(estudiante.getCantidad());
-        LocalDate fechaEmision = LocalDate.now();
-        for (int i = 0; i < estudiante.getCantidad(); i++) {
-            CuotaEntity cuota = creacuota(i + 1, estudiante1);
-            cuota.setFechaEmision(fechaEmision);
-            cuota.setFechaPago(cuota.getFechaEmision().plusMonths(1).withDayOfMonth(5));
-            cuota.setFechaVencimiento(cuota.getFechaEmision().plusMonths(1).withDayOfMonth(11));
-            guardarcuota(cuota);
-            fechaEmision = cuota.getFechaEmision().plusMonths(1);
+
+    public void cuotasxEstudiante(String rut) {
+        EstudianteEntity estudiante = findByRut(rut, 0);
+        if (estudiante != null) {
+            int cantidadCuotas = estudiante.getCantidad();
+            LocalDate fechaEmision = LocalDate.now();
+            double cuotaMensual = calcularcuotamensuales(estudiante);
+            for (int i = 0; i < cantidadCuotas; i++) {
+                CuotaEntity cuota = creacuota(i + 1, estudiante);
+                cuota.setArancelMensual(cuotaMensual);
+                cuota.setFechaEmision(fechaEmision);
+                cuota.setFechaPago(cuota.getFechaEmision().plusMonths(1).withDayOfMonth(5));
+                cuota.setFechaVencimiento(cuota.getFechaEmision().plusMonths(1).withDayOfMonth(11));
+                guardarcuota(cuota);
+                fechaEmision = cuota.getFechaEmision().plusMonths(1);
+            }
         }
     }
     /*
@@ -107,9 +113,9 @@ public class CuotaService {
         return cuotaRepository.findByEstudianteRut(rut);
     }
     */
-    public EstudianteEntity findByRut(String rut){
+    public EstudianteEntity findByRut(String rut, int cantidad){
         System.out.println("rut: "+rut);
-        ResponseEntity<EstudianteEntity>response=restTemplate.exchange("http://localhost:8080/Estudiante/" + rut,
+        ResponseEntity<EstudianteEntity>response=restTemplate.exchange("http://localhost:8080/Estudiante/" + rut+ "?cantidad=" + cantidad,
         HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<EstudianteEntity>() {}
