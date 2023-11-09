@@ -24,6 +24,7 @@ public class CuotaService {
     public CuotaEntity creacuota(int numero, EstudianteEntity estudiante){
         CuotaEntity cuota = new CuotaEntity();
         //cuota.setEstudiante(estudiante);
+        cuota.setRut(estudiante.getRut());
         cuota.setEstado("Pendiente");
         cuota.setArancel(calculararancel(estudiante));
         cuota.setNumeroCuota(numero);
@@ -107,12 +108,12 @@ public class CuotaService {
             }
         }
     }
-    /*
+
     // Obtener las cuotas asociadas por el rut //
     public ArrayList<CuotaEntity> obtenerPorRut(String rut){
-        return cuotaRepository.findByEstudianteRut(rut);
+        return cuotaRepository.findByRut(rut);
     }
-    */
+
     public EstudianteEntity findByRut(String rut, int cantidad){
         System.out.println("rut: "+rut);
         ResponseEntity<EstudianteEntity>response=restTemplate.exchange("http://localhost:8080/Estudiante/" + rut+ "?cantidad=" + cantidad,

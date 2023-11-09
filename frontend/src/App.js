@@ -7,6 +7,7 @@ import HeaderComponent from './components/HeaderComponent';
 import CrearEstudiante from './components/CrearEstudiante';
 import ListarEstudiante from './components/ListarEstudiante';
 import GeneradorCuotas from './components/GeneradorCuotas';
+import MostrarCuotas from './components/MostrarCuotas';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Route path="/crear-estudiante" element={<CrearEstudiante />} />
             <Route path="/lista-estudiantes" element={<ListarEstudiante />} />
             <Route path="/generar-cuota" element={<GeneradorCuotas />} />
+            <Route path="/mostrar-cuota" element={<MostrarCuotas />} />
           </Routes>
         </div>
       </Router>

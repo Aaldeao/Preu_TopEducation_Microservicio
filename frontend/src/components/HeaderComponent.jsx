@@ -47,7 +47,7 @@ const HeaderComponent = () => {
                 </Dropdown.Item>
 
                 <Dropdown.Item>
-                  <Link to="/...." className="nav-link">
+                  <Link to="/mostrar-cuota" className="nav-link">
                     Mostrar Cuotas
                   </Link>
                 </Dropdown.Item>

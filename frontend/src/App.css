@@ -37,6 +37,11 @@
   }
 }
 
+/*Separador*/
+.separador {
+  margin-right: 10px;
+}
+
 /*Diseño del formulario*/
 .generalformulario {
   display: flex;

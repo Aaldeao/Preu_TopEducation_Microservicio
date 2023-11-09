@@ -19,12 +19,11 @@ public class CuotaController {
         cuotaService.cuotasxEstudiante(rut);
         return ResponseEntity.ok("Cuotas generadas para el estudiante: " + rut);
     }
-    /*
+
     @GetMapping("/buscarcuota/{rut}")
     public ResponseEntity<ArrayList<CuotaEntity>> obtenerPorRut(@PathVariable String rut){
         ArrayList<CuotaEntity> cuota = cuotaService.obtenerPorRut(rut);
         return ResponseEntity.ok(cuota);
 
     }
-     */
 }

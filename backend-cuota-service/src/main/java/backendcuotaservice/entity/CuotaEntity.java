@@ -15,6 +15,7 @@ public class CuotaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idCuota;
+    private String rut;
     private int numeroCuota;
     private double arancel;
     private double arancelMensual;

@@ -1,14 +1,20 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import CuotaService from "../services/CuotaService";
 
 function GenerarCuotas() {
     const [rut, setRut] = useState('');
+    const navigate = useNavigate();
+    const navigateHome = () => {
+        navigate("/");
+    };
 
     const generarCuotas = () => {
         CuotaService.generarCuotas(rut)
             .then((response) => {
                 console.log("Cuotas generadas con éxito:", response.data);
             });
+            navigateHome();
     }
 
     return (
