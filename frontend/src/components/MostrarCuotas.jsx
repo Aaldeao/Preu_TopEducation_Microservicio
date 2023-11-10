@@ -10,6 +10,18 @@ function BuscarcuotasPorRut() {
         setCuotas(response.data);
       })
   };
+  const pagarCuota = (idCuota) => {
+    CuotaService.pagarCuota(idCuota)
+      .then((response) => {
+        buscarCuotas();
+      })
+  };
+  const atrasadaCuota = (idCuota) => {
+    CuotaService.atrasadaCuota(idCuota)
+      .then((response) => {
+        buscarCuotas();
+      })
+  };
 
   return (
     <div align="center" className="container-2">
@@ -48,8 +60,8 @@ function BuscarcuotasPorRut() {
                 <td>{cuota.fechaVencimiento}</td>
                 <td>{cuota.estado}</td>
                 <td>
-                <button className="btn btn-success separador" >Pagar</button>
-                <button className="btn btn-danger separador" >Atrasadaento</button>
+                <button className="btn btn-success separador" onClick={() => pagarCuota(cuota.idCuota)} >Pagar</button>
+                <button className="btn btn-danger separador" onClick={() => atrasadaCuota(cuota.idCuota)} >Atrasada</button>
                 <button className="btn btn-info separador" >Descuento</button>
 
                 </td>

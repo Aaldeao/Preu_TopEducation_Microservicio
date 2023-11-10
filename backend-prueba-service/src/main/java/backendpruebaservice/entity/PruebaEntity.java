@@ -1,0 +1,22 @@
+package backendpruebaservice.entity;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+
+@Entity
+@Table(name = "Prueba")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class PruebaEntity {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idPrueba;
+    //private String rut; posible cambio //
+    private String fechaExamen;
+    private Long puntaje;
+    private int cantidadPrueba;
+}

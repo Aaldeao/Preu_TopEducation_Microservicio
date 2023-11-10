@@ -26,4 +26,18 @@ public class CuotaController {
         return ResponseEntity.ok(cuota);
 
     }
+
+    @PostMapping("/pagocuota/{idCuota}") // Al apretar el boton de pagar en la cuota obtenemos el idCuota y se cambiamos el estado //
+    public ResponseEntity<String> pagoCuota(@PathVariable Long idCuota) {
+        CuotaEntity cuota = cuotaService.obteneridCuota(idCuota);
+        cuotaService.pagarCuota(cuota);
+        return ResponseEntity.ok ("Cuota del estudiante pagada");
+    }
+
+    @PostMapping("/atrasadacuota/{idCuota}")// Al apretar el boton de atrasada en la cuota se cambiamos el estado para luego agregar sus intereses //
+    public ResponseEntity<String> pagarCuotaAtrasada(@PathVariable Long idCuota){
+        CuotaEntity cuota = cuotaService.obteneridCuota(idCuota);
+        cuotaService.pagarCuotaAtrasadas(cuota);
+        return ResponseEntity.ok ("Cuota del estudiante Atrasada");
+    }
 }

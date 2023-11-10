@@ -11,7 +11,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CuotaService {
@@ -84,13 +87,12 @@ public class CuotaService {
         return Math.round(arancelMensual); // redondea el valor decimal al numero entero mas cercano //
     }
 
-    // Guarda el arancel y su arancel mensual del estudiante //
+    // Guarda cuota del estudiante //
     public CuotaEntity guardarcuota(CuotaEntity cuota) {
         return cuotaRepository.save(cuota);
     }
 
     // Genera las cuotas mediante a la cantidad asociada que solicia la persona y las guarda  //
-
     public void cuotasxEstudiante(String rut) {
         EstudianteEntity estudiante = findByRut(rut, 0);
         if (estudiante != null) {
@@ -109,9 +111,63 @@ public class CuotaService {
         }
     }
 
+    // Busca la cuota mediante su idCuota //
+    public CuotaEntity obteneridCuota(Long idCuota) {
+        Optional<CuotaEntity> optionalCuota = cuotaRepository.findById(idCuota);
+        return optionalCuota.orElse(null); // El cual retorna la cuota o null si es que no la encuentra //
+    }
+
+    // Al apretar el boton pagar se cambie el estado de la cuota de pendiente a pagado o atrasada dependiendo de la fecha local //
+    public void pagarCuota(CuotaEntity cuota){
+        LocalDate fechaLocal = LocalDate.now();
+        LocalDate fechaPago = cuota.getFechaPago();
+        if ("Pendiente".equals(cuota.getEstado()) ) {
+            int diaDelmes = fechaLocal.getDayOfMonth();
+            int mesDeldia = fechaPago.getMonthValue();
+            if (fechaLocal.equals(fechaPago) || (fechaLocal.getMonthValue() == mesDeldia && diaDelmes >= 6 && diaDelmes <= 10)) {
+                cuota.setEstado("Pagado");
+                guardarcuota(cuota);
+            }
+        }
+    }
+
     // Obtener las cuotas asociadas por el rut //
     public ArrayList<CuotaEntity> obtenerPorRut(String rut){
         return cuotaRepository.findByRut(rut);
+    }
+
+    // Calcula los meses atrasados y aplica los intereses según la cantidad de meses //
+    public void pagarCuotaAtrasadas(CuotaEntity cuota) {
+        LocalDate fechaLocal = LocalDate.now();
+        long mesesAtrasados = ChronoUnit.MONTHS.between(cuota.getFechaPago(), fechaLocal);// calcula la cantidad de meses entre la fecha de pago con la fecha local //
+        if ("Pendiente".equals(cuota.getEstado())) {
+            double interes = 0;
+            if ( mesesAtrasados == 1) {
+                interes = cuota.getArancelMensual() * 0.03;
+                cuota.setEstado("Atrasada");
+            } else if (mesesAtrasados == 2) {
+                interes = cuota.getArancelMensual() * 0.06;
+                cuota.setEstado("Atrasada");
+            } else if (mesesAtrasados == 3) {
+                interes = cuota.getArancelMensual() * 0.09;
+                cuota.setEstado("Atrasada");
+            } else if (mesesAtrasados > 3) {
+                interes = cuota.getArancelMensual() * 0.15;
+                cuota.setEstado("Atrasada");
+            }
+            double nuevoArancelMensual = cuota.getArancelMensual() + interes;
+            cuota.setArancelMensual(nuevoArancelMensual);
+            cuotaRepository.save(cuota);
+
+            List<CuotaEntity> cuotasPendientes = cuotaRepository.findCuotasPendintes(); // Obtengo una lista de las cuotas pendientes que quedan y le aplico el interes que corresponde //
+            for (CuotaEntity cuotaPendientes : cuotasPendientes) {
+                if (!cuotaPendientes.equals(cuota)) {
+                    double nuevoArancelMensualPendiente = cuotaPendientes.getArancelMensual() + interes;
+                    cuotaPendientes.setArancelMensual(nuevoArancelMensualPendiente);
+                }
+            }
+            cuotaRepository.saveAll(cuotasPendientes);
+        }
     }
 
     public EstudianteEntity findByRut(String rut, int cantidad){

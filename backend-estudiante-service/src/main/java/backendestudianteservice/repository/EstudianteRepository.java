@@ -10,7 +10,5 @@ import java.util.ArrayList;
 public interface EstudianteRepository extends JpaRepository<EstudianteEntity, String> {
 
     EstudianteEntity findByRut(String rut); // Permite buscar por el rut en la base de datos //
-
-   //ArrayList<EstudianteEntity> findAll(); //Obtiene lo del estudiante //
-   ArrayList<EstudianteEntity> findAll(); //Obtiene a todos los estudiantes //
+    ArrayList<EstudianteEntity> findAll(); //Obtiene a todos los estudiantes //
 }
