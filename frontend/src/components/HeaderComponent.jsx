@@ -53,7 +53,7 @@ const HeaderComponent = () => {
                 </Dropdown.Item>
 
                 <Dropdown.Item>
-                  <Link to="/...." className="nav-link">
+                  <Link to="/subir-excel" className="nav-link">
                     Subir Archivo
                   </Link>
                 </Dropdown.Item>

@@ -8,6 +8,7 @@ import CrearEstudiante from './components/CrearEstudiante';
 import ListarEstudiante from './components/ListarEstudiante';
 import GeneradorCuotas from './components/GeneradorCuotas';
 import MostrarCuotas from './components/MostrarCuotas';
+import SubirExcel from './components/SubirExcel';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="/lista-estudiantes" element={<ListarEstudiante />} />
             <Route path="/generar-cuota" element={<GeneradorCuotas />} />
             <Route path="/mostrar-cuota" element={<MostrarCuotas />} />
+            <Route path="/subir-excel" element={<SubirExcel />} />
           </Routes>
         </div>
       </Router>

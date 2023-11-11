@@ -15,7 +15,7 @@ public class PruebaEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idPrueba;
-    //private String rut; posible cambio //
+    private String rut;
     private String fechaExamen;
     private Long puntaje;
     private int cantidadPrueba;

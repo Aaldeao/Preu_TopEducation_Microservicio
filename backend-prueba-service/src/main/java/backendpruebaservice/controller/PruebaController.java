@@ -2,27 +2,25 @@ package backendpruebaservice.controller;
 
 import backendpruebaservice.service.PruebaService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
-@RequestMapping("/Prueba")
+@RequestMapping("/prueba")
+@CrossOrigin(origins = "http://localhost:3000/")
 public class PruebaController {
     @Autowired
     PruebaService pruebaService;
-    /*
-    @GetMapping("/subirArchivoExcel") // Devuelve la vista para subir el archivo excel //
-    public String subirArchivo(){
-        return "subirArchivoExcel";
-    }
 
-    // Recibe el archivo .csv para guardarlo en la base de datos //
-    @PostMapping("/SubirExcel")
-    public String subirExcel(@RequestParam("archivo_excel") MultipartFile pruebaExcel, Model model) {
-        pruebaService.guardar(pruebaExcel);
-        String resultado = pruebaService.cargarCsv(pruebaExcel);
-        model.addAttribute("resultado", resultado);
-        return "index";
+    @PostMapping("/subirExcel") // Específica la ruta para subir el archivo Excel
+    public ResponseEntity<String> subirExcel(@RequestParam("pruebaExcel") MultipartFile pruebaExcel) {
+        if (pruebaExcel != null) {
+            pruebaService.guardar(pruebaExcel);
+            String resultado = pruebaService.cargarCsv(pruebaExcel);
+            return ResponseEntity.ok(resultado);
+        } else {
+            return ResponseEntity.badRequest().body("El archivo es nulo.");
+        }
     }
-     */
 }
