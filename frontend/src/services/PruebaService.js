@@ -1,20 +1,13 @@
 import axios from "axios";
 
-const PRUEBA_API_URL = "http://localhost:8084/prueba";
-const prueba = axios.create({ baseURL: PRUEBA_API_URL });
+const PRUEBA_API_URL = "http://localhost:8080/Prueba";
 
 class PruebaService {
-  async subirExcel(formData) {
-    try {
-      const res = await prueba.post("/subirExcel", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      return res.data;
-    } catch (error) {
-      throw error;
-    }
+  subirExcel(formData){
+    return axios.post(PRUEBA_API_URL + "/subirExcel" , formData);
+  }
+  reporte(){
+    return axios.get(PRUEBA_API_URL + "/reporte");
   }
 }
 

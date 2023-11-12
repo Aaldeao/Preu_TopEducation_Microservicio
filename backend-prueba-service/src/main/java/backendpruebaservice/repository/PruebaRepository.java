@@ -8,5 +8,5 @@ import java.util.ArrayList;
 
 @Repository
 public interface PruebaRepository extends JpaRepository<PruebaEntity, Long> {
-    //ArrayList<PruebaEntity> findByEstudianteRut(String rut);// La busqueda del rut en la base de datos //
+    ArrayList<PruebaEntity> findByRut(String rut);// La busqueda del rut en la base de datos //
 }

@@ -16,6 +16,9 @@ class CuotaService {
   atrasadaCuota(idCuota){
     return axios.post(CUOTA_API_URL + `/atrasadacuota/${idCuota}`)
   }
+  descuentoCuota(idCuota){
+    return axios.post(CUOTA_API_URL + `/descuentocuota/${idCuota}`)
+  }
 }
 
 export default new CuotaService();

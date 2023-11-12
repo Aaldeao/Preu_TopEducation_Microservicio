@@ -13,7 +13,7 @@ function ListarEstudiante() {
     <div className="general">
       <div align="center" className="container-2">
         <h1><b>Lista de Estudiantes</b></h1>
-        <table className="content-table">
+        <table className="table">
           <thead>
             <tr>
               <th>RUT</th>

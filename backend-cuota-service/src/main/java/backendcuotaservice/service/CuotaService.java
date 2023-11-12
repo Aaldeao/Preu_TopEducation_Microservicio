@@ -170,6 +170,88 @@ public class CuotaService {
         }
     }
 
+    // Se realiza el descuento a las cuotas mensuales pendientes que debe pagar el estudiantes gracias a su promedio de los puntajes de las pruebas //
+    public void descuentoPrueba(CuotaEntity cuota , String rutEstudiante){
+        LocalDate fechaLocal = LocalDate.now();
+        LocalDate fechaPago = cuota.getFechaPago();
+        if ("Pendiente".equals(cuota.getEstado()) && !cuota.isDescuentoPrueba() && fechaLocal.getMonth() == fechaPago.getMonth()) {
+            double promedio = calcularpromediopuntaje(rutEstudiante);
+            double arancelmensual= cuota.getArancelMensual();
+            double descuento = 0;
+            if (promedio >= 950 && promedio <= 1000){
+                descuento = arancelmensual * 0.10;
+
+            } else if (promedio >= 900 && promedio <= 949){
+                descuento = arancelmensual * 0.05;
+
+            } else if (promedio >= 850 && promedio <= 899){
+                descuento = arancelmensual * 0.02;
+
+            }
+            cuota.setArancelMensual(arancelmensual - descuento);
+            cuota.setDescuentoPrueba(true);
+            cuotaRepository.save(cuota);
+
+            List<CuotaEntity> cuotasPendientes = cuotaRepository.findCuotasPendintes();
+            for (CuotaEntity cuotaPendientes : cuotasPendientes) {
+                if (!cuotaPendientes.equals(cuota)) {
+                    double nuevoArancelMensualPendiente2 = cuotaPendientes.getArancelMensual() - descuento;
+                    cuotaPendientes.setArancelMensual(nuevoArancelMensualPendiente2);
+                }
+            }
+            cuotaRepository.saveAll(cuotasPendientes);
+        }
+    }
+
+    // Obtiene cuantas cuotas pagadas tienen el rut asociado //
+    public int registrarPagada(String rut){
+        int cuotaPagadas = cuotaRepository.cuotaspagadasRut(rut);
+        return cuotaPagadas;
+    }
+
+    // Obtiene cuantas cuotas atrasadas tienen el rut asociado //
+    public int registrarAtrasadas(String rut){
+        int cuotasAtrasada = cuotaRepository.cuotasAtrasadaRut(rut);
+        return cuotasAtrasada;
+    }
+
+    // Obtenemos el monto total que ha pagado el rut asociado //
+    public double montoCuotasPagadas (String rut){
+        double montototal = 0;
+        ArrayList<CuotaEntity> cuotasPagadas = cuotaRepository.findCuotasPagadas(rut);
+        for (CuotaEntity cuota : cuotasPagadas){
+            montototal = montototal + cuota.getArancelMensual();
+        }
+        return Math.round(montototal);
+    }
+
+    // Obtenemos el monto total que le falta por pagar estudiante(rut) asociado //
+    public double montoApagar (String rut){
+        double montototalatrasado = 0;
+        ArrayList<CuotaEntity> cuotasPendiente = cuotaRepository.findCuotasPendienterut(rut);
+        for (CuotaEntity cuota : cuotasPendiente){
+            montototalatrasado = montototalatrasado + cuota.getArancelMensual();
+        }
+        return Math.round(montototalatrasado);
+    }
+
+    // Obtenemos la ultima fecha de pago de la cuota del rut asociado //
+    public LocalDate obtenerFechaultimaCuota (String rut){
+        ArrayList<CuotaEntity> cuotas = cuotaRepository.findUltimafechadepago(rut);
+        if (!cuotas.isEmpty()){
+            CuotaEntity ultimacuota= cuotas.get(0);
+            return ultimacuota.getFechaPago();
+        }else {
+            return null;
+        }
+    }
+    public double obtenerArancelPorRut(String rut) {
+        ArrayList<CuotaEntity> cuota = cuotaRepository.findByRut(rut);
+        CuotaEntity cuotas = cuota.get(0);
+        return cuotas.getArancel();
+    }
+
+//Los llamados a otros microservicios//
     public EstudianteEntity findByRut(String rut, int cantidad){
         System.out.println("rut: "+rut);
         ResponseEntity<EstudianteEntity>response=restTemplate.exchange("http://localhost:8080/Estudiante/" + rut+ "?cantidad=" + cantidad,
@@ -179,4 +261,14 @@ public class CuotaService {
         );
         return response.getBody();
     }
+    public Double calcularpromediopuntaje(String rut){
+        ResponseEntity<Double> response = restTemplate.exchange(
+                "http://localhost:8080/Prueba/calcularpromediopuntaje/" + rut,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<Double>() {}
+        );
+        return response.getBody();
+    }
+
 }

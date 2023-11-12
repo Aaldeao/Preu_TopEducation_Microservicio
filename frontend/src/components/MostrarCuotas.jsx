@@ -22,6 +22,12 @@ function BuscarcuotasPorRut() {
         buscarCuotas();
       })
   };
+  const descuentoCuota = (idCuota) => {
+    CuotaService.descuentoCuota(idCuota)
+      .then((response) => {
+        buscarCuotas();
+      })
+  };
 
   return (
     <div align="center" className="container-2">
@@ -37,7 +43,7 @@ function BuscarcuotasPorRut() {
           />
         </div>
         <button className="btn btn-primary" onClick={buscarCuotas}>Buscar Cuotas</button>
-        <table className="content-table">
+        <table className="table">
           <thead>
             <tr>
             <th>Rut</th>
@@ -62,7 +68,7 @@ function BuscarcuotasPorRut() {
                 <td>
                 <button className="btn btn-success separador" onClick={() => pagarCuota(cuota.idCuota)} >Pagar</button>
                 <button className="btn btn-danger separador" onClick={() => atrasadaCuota(cuota.idCuota)} >Atrasada</button>
-                <button className="btn btn-info separador" >Descuento</button>
+                <button className="btn btn-info separador" onClick={() => descuentoCuota(cuota.idCuota)}>Descuento</button>
 
                 </td>
             </tr>

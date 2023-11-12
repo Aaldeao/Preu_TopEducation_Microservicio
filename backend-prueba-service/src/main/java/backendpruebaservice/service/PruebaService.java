@@ -1,7 +1,9 @@
 package backendpruebaservice.service;
 
 import backendpruebaservice.entity.PruebaEntity;
+import backendpruebaservice.model.CuotaEntity;
 import backendpruebaservice.model.EstudianteEntity;
+import backendpruebaservice.model.ReporteEntity;
 import backendpruebaservice.repository.PruebaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -10,15 +12,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.multipart.MultipartFile;
-import lombok.Generated;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Scanner;
-import java.nio.file.Paths;
+
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
 
 @Service
 public class PruebaService {
@@ -26,30 +27,6 @@ public class PruebaService {
     PruebaRepository pruebaRepository;
     @Autowired
     RestTemplate restTemplate;
-
-    // Guarda el archivo subido en mi carpeta raiz //
-   private final Logger logg = LoggerFactory.getLogger(PruebaService.class);
-   @Generated
-   public String guardar(MultipartFile file){
-       String filename = file.getOriginalFilename();
-       if(filename != null){
-           if(!file.isEmpty()){
-               try{
-                   byte [] bytes = file.getBytes();
-                   Path path  = Paths.get(file.getOriginalFilename());
-                   Files.write(path, bytes);
-                   logg.info("Archivo guardado");
-               }
-               catch (IOException e){
-                   logg.error("ERROR", e);
-               }
-           }
-           return "Archivo guardado con exito!";
-       }
-       else{
-           return "No se pudo guardar el archivo";
-       }
-   }
 
 // Lee un archivo .csv el cual valida si el formato es el indicado(rut,fecha,puntaje) y luego lo guarda en la base de datos //
     public String cargarCsv(MultipartFile archivoCSV) {
@@ -82,10 +59,11 @@ public class PruebaService {
             return "error con el archivo.csv";
         }
     }
-/*
+
+
     // Obtiene lo asociado del rut //
     public ArrayList<PruebaEntity> obtenerPruebasPorRut(String rut){
-        return pruebaRepository.findByEstudianteRut(rut);
+        return pruebaRepository.findByRut(rut);
     }
 
     // Calcula la cantidad de pruebas asociado al rut(cuantas veces se repite el rut) //
@@ -113,15 +91,119 @@ public class PruebaService {
         return sumaNotas;
     }
 
-        public EstudianteEntity findByRut(String rut){
-            System.out.println("rut: "+rut);
-            ResponseEntity<EstudianteEntity> response=restTemplate.exchange("http://localhost:8080/Estudiante/" + rut,
-                    HttpMethod.GET,
-                    null,
-                    new ParameterizedTypeReference<EstudianteEntity>() {}
-            );
-            return response.getBody();
-        }
+    // Crea un reporte para cada estudiante con los atributos solicitados y los almacena ReporteEntity //
+    public ArrayList<ReporteEntity> crearReporte(){
+        List<EstudianteEntity> estudiantes = obtenerTodosLosEstudiantes();
+        ArrayList <ReporteEntity> reportes = new ArrayList<>();
 
- */
+        for (EstudianteEntity estudiante : estudiantes){
+            List<CuotaEntity> cuotas = obtenerCuotasDeEstudiante(estudiante.getRut());
+            int examenesRendidos = calcularCantidadprueba(estudiante.getRut());
+            double arancel = calculararancel(estudiante.getRut());
+            String tipoDePago = estudiante.getTipoDepago();
+            double promedioPuntaje = calcularpromediopuntaje(estudiante.getRut());
+            int cuotasPagadas = obtenerCuotasPagadas(estudiante.getRut());
+            double montoPagado = obtenerMontoCuotasPagadas(estudiante.getRut());
+            int cuotasAtrasadas = obtenerCuotasAtrasadas(estudiante.getRut());
+            LocalDate fechaUltimacuota = obtenerFechaultimaCuota(estudiante.getRut());
+            double saldoAPagar = montoApagar(estudiante.getRut());
+
+            ReporteEntity reporte = new ReporteEntity();
+            reporte.setExamenesRendidos(examenesRendidos);
+            reporte.setPromedioPuntaje(promedioPuntaje);
+            reporte.setRut(estudiante.getRut());
+            reporte.setNombre(estudiante.getNombres());
+            reporte.setArancel(arancel);
+            reporte.setTipoPago(tipoDePago);
+            reporte.setCuotasPactadas(cuotas.size());
+            reporte.setCuotasPagadas(cuotasPagadas);
+            reporte.setCuotasAtrasadas(cuotasAtrasadas);
+            reporte.setMontoPagado(montoPagado);
+            reporte.setSaldoaPagar(saldoAPagar);
+            reporte.setFechaUltimoCuota(fechaUltimacuota);
+            reportes.add(reporte);
+
+        }
+        return reportes;
+    }
+
+    //Los llamados a otros microservicios//
+    public List<EstudianteEntity> obtenerTodosLosEstudiantes() {
+        ResponseEntity<List<EstudianteEntity>> response = restTemplate.exchange("http://localhost:8080/Estudiante/",
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<EstudianteEntity>>() {}
+        );
+        return response.getBody();
+    }
+
+    public List<CuotaEntity> obtenerCuotasDeEstudiante(String rut) {
+        ResponseEntity<List<CuotaEntity>> response = restTemplate.exchange(
+                "http://localhost:8080/Cuota/buscarcuota/" + rut,
+                HttpMethod.GET,
+                null,
+                new ParameterizedTypeReference<List<CuotaEntity>>() {}
+        );
+        return response.getBody();
+    }
+
+    public double calculararancel(String rut) {
+        ResponseEntity<Double> response = restTemplate.exchange(
+                "http://localhost:8080/Cuota/" + rut ,
+                HttpMethod.GET,
+                null,
+                Double.class
+        );
+        return response.getBody();
+    }
+
+    public int obtenerCuotasPagadas(String rut) {
+        ResponseEntity<Integer> response = restTemplate.exchange(
+                "http://localhost:8080/Cuota/cuotaspagadas/" + rut,
+                HttpMethod.GET,
+                null,
+                Integer.class
+        );
+        return response.getBody();
+    }
+
+    public double obtenerMontoCuotasPagadas(String rut) {
+        ResponseEntity<Double> response = restTemplate.exchange(
+                "http://localhost:8080/Cuota/montocuotaspagadas/" + rut,
+                HttpMethod.GET,
+                null,
+                Double.class
+        );
+        return response.getBody();
+    }
+
+    public int obtenerCuotasAtrasadas(String rut) {
+        ResponseEntity<Integer> response = restTemplate.exchange(
+                "http://localhost:8080/Cuota/cuotasatrasadas/" + rut,
+                HttpMethod.GET,
+                null,
+                Integer.class
+        );
+        return response.getBody();
+    }
+
+    public LocalDate obtenerFechaultimaCuota(String rut) {
+        ResponseEntity<LocalDate> response = restTemplate.exchange(
+                "http://localhost:8080/Cuota/fechaultimacuota/" + rut,
+                HttpMethod.GET,
+                null,
+                LocalDate.class
+        );
+        return response.getBody();
+    }
+    public double montoApagar(String rut) {
+        ResponseEntity<Double> response = restTemplate.exchange(
+                "http://localhost:8080/Cuota/montoapagar/" + rut,
+                HttpMethod.GET,
+                null,
+                Double.class
+        );
+        return response.getBody();
+    }
+
 }

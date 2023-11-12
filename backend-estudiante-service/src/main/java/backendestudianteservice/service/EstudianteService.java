@@ -11,12 +11,7 @@ public class EstudianteService {
 
     @Autowired // Es una instancia de EstudianteRepository //
     EstudianteRepository estudianteRepository;
-    /*
-    @Autowired
-    CuotaService cuotaService;
-    @Autowired
-    PruebaService pruebaService;
-    */
+
     public EstudianteEntity ingresarestudiante(EstudianteEntity estudiante){ // Guarda en la base de datos los datos del estudiante //
         return estudianteRepository.save(estudiante);
     }

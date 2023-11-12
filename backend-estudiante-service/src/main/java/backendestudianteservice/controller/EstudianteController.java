@@ -13,18 +13,6 @@ public class EstudianteController {
 
     @Autowired // Es una instancia de EstudianteService //
     EstudianteService estudianteService;
-    /*
-    @GetMapping("/") // devuelve la vista del inicio //
-    public String Inicio(){
-        return "index";
-    }
-     @GetMapping("/Formulario") // muestra la vista del formulario y recibe los datos //
-    public String IngresarEstudiante(Model model){
-        model.addAttribute("estudiante", new EstudianteEntity());
-        return "Formulario";
-    }
-    */
-
     @PostMapping("/")// procesa y guardarlo en la base de datos //
     public ResponseEntity<String> guardarEstudiante(@RequestBody EstudianteEntity estudiante){
         estudianteService.ingresarestudiante(estudiante);
@@ -42,13 +30,4 @@ public class EstudianteController {
         EstudianteEntity estudiante = estudianteService.buscarRut(rut);
         return ResponseEntity.ok(estudiante);
     }
-    /*
-    @PutMapping("/{rut}")
-    public ResponseEntity<String> actualizarCantidadCuotas(@PathVariable("rut") String rut, @RequestParam("cantidad") int cantidad) {
-        EstudianteEntity estudiante = estudianteService.buscarRut(rut);
-        estudiante.setCantidad(cantidad);
-        estudianteService.ingresarestudiante(estudiante);
-        return ResponseEntity.ok("Cantidad de cuotas actualizada para el estudiante con rut: " + rut);
-    }
-     */
 }

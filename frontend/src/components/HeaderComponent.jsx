@@ -59,7 +59,7 @@ const HeaderComponent = () => {
                 </Dropdown.Item>
 
                 <Dropdown.Item>
-                  <Link to="/...." className="nav-link">
+                  <Link to="/reporte" className="nav-link">
                     Mostrar Reporte
                   </Link>
                 </Dropdown.Item>
