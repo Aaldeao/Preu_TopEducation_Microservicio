@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-prueba-deployment
+  labels:
+    app: backend-prueba-deployment
+spec:
+  selector:
+    matchLabels:
+      app: backend-prueba-deployment
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: backend-prueba-deployment
+    spec:
+      containers:
+        - name: preu-topeducation-prueba
+          image: aaldeao/preu-topeducation-prueba:latest
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SPRING_CLOUD_CONFIG_URI
+              value: http://backend-config-service:8081
+            - name: EUREKA_CLIENT_SERVICEURL_DEFAULTZONE
+              value: http://backend-eureka-service:8761
+            - name: eureka.instance.preferIpAddress
+              value: "true"
+            - name: POSTGRES_DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config-map
+                  key: POSTGRES_DB_HOST
+            - name: POSTGRES_DB_PRUEBA
+              valueFrom:
+                configMapKeyRef:
+                  name: postgres-config-map
+                  key: POSTGRES_DB_PRUEBA
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-credentials
+                  key: POSTGRES_PASSWORD
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend-prueba-service
+  labels:
+    app: backend-prueba-service
+spec:
+  selector:
+    app: backend-prueba-deployment
+  ports:
+    - protocol: TCP
+      port: 8084
+      targetPort: 8084
+  type: LoadBalancer

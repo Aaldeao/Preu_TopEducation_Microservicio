@@ -129,7 +129,7 @@ public class PruebaService {
 
     //Los llamados a otros microservicios//
     public List<EstudianteEntity> obtenerTodosLosEstudiantes() {
-        ResponseEntity<List<EstudianteEntity>> response = restTemplate.exchange("http://localhost:8080/Estudiante/",
+        ResponseEntity<List<EstudianteEntity>> response = restTemplate.exchange("http://backend-gateway-service:8080/Estudiante/",
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<EstudianteEntity>>() {}
@@ -139,7 +139,7 @@ public class PruebaService {
 
     public List<CuotaEntity> obtenerCuotasDeEstudiante(String rut) {
         ResponseEntity<List<CuotaEntity>> response = restTemplate.exchange(
-                "http://localhost:8080/Cuota/buscarcuota/" + rut,
+                "http://backend-gateway-service:8080/Cuota/buscarcuota/" + rut,
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<List<CuotaEntity>>() {}
@@ -149,7 +149,7 @@ public class PruebaService {
 
     public double calculararancel(String rut) {
         ResponseEntity<Double> response = restTemplate.exchange(
-                "http://localhost:8080/Cuota/" + rut ,
+                "http://backend-gateway-service:8080/Cuota/" + rut ,
                 HttpMethod.GET,
                 null,
                 Double.class
@@ -159,7 +159,7 @@ public class PruebaService {
 
     public int obtenerCuotasPagadas(String rut) {
         ResponseEntity<Integer> response = restTemplate.exchange(
-                "http://localhost:8080/Cuota/cuotaspagadas/" + rut,
+                "http://backend-gateway-service:8080/Cuota/cuotaspagadas/" + rut,
                 HttpMethod.GET,
                 null,
                 Integer.class
@@ -169,7 +169,7 @@ public class PruebaService {
 
     public double obtenerMontoCuotasPagadas(String rut) {
         ResponseEntity<Double> response = restTemplate.exchange(
-                "http://localhost:8080/Cuota/montocuotaspagadas/" + rut,
+                "http://backend-gateway-service:8080/Cuota/montocuotaspagadas/" + rut,
                 HttpMethod.GET,
                 null,
                 Double.class
@@ -179,7 +179,7 @@ public class PruebaService {
 
     public int obtenerCuotasAtrasadas(String rut) {
         ResponseEntity<Integer> response = restTemplate.exchange(
-                "http://localhost:8080/Cuota/cuotasatrasadas/" + rut,
+                "http://backend-gateway-service:8080/Cuota/cuotasatrasadas/" + rut,
                 HttpMethod.GET,
                 null,
                 Integer.class
@@ -189,7 +189,7 @@ public class PruebaService {
 
     public LocalDate obtenerFechaultimaCuota(String rut) {
         ResponseEntity<LocalDate> response = restTemplate.exchange(
-                "http://localhost:8080/Cuota/fechaultimacuota/" + rut,
+                "http://backend-gateway-service:8080/Cuota/fechaultimacuota/" + rut,
                 HttpMethod.GET,
                 null,
                 LocalDate.class
@@ -198,7 +198,7 @@ public class PruebaService {
     }
     public double montoApagar(String rut) {
         ResponseEntity<Double> response = restTemplate.exchange(
-                "http://localhost:8080/Cuota/montoapagar/" + rut,
+                "http://backend-gateway-service:8080/Cuota/montoapagar/" + rut,
                 HttpMethod.GET,
                 null,
                 Double.class

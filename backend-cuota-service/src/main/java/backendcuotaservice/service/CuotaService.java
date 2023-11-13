@@ -254,7 +254,7 @@ public class CuotaService {
 //Los llamados a otros microservicios//
     public EstudianteEntity findByRut(String rut, int cantidad){
         System.out.println("rut: "+rut);
-        ResponseEntity<EstudianteEntity>response=restTemplate.exchange("http://localhost:8080/Estudiante/" + rut+ "?cantidad=" + cantidad,
+        ResponseEntity<EstudianteEntity>response=restTemplate.exchange("http://backend-gateway-service:8080/Estudiante/" + rut+ "?cantidad=" + cantidad,
         HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<EstudianteEntity>() {}
@@ -263,7 +263,7 @@ public class CuotaService {
     }
     public Double calcularpromediopuntaje(String rut){
         ResponseEntity<Double> response = restTemplate.exchange(
-                "http://localhost:8080/Prueba/calcularpromediopuntaje/" + rut,
+                "http://backend-gateway-service:8080/Prueba/calcularpromediopuntaje/" + rut,
                 HttpMethod.GET,
                 null,
                 new ParameterizedTypeReference<Double>() {}
